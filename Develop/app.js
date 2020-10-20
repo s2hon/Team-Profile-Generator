@@ -18,100 +18,59 @@ const roster = [];
 // and to create objects for each team member (using the correct classes as blueprints!)
 
 function promptUser() {
-    return prompt.inquirer (question)
+    console.log ('////////Thank you for choosing the Team Profile Generator/////////');
+    return inquirer.prompt (question)
 } 
+
+function resume () {
+    inquirer.prompt([{
+    type:'confirm',
+    name: 'end',
+    message: 'Would you like to enter another employee information?'
+    }]).then(
+        answer => answer.end ? init() : generateHTML ());
+};
 
 async function init () {
     try {
-        resOne = await promptUser(response);
-        let resTwo = '';
-        if (response.role === 'engineer') {
-            resTwo = await prompt.inquirer (
-                [{type: 'input',
-                name: 'gitHubName',
-                message: 'What is the employees GitHub username?',
-                validate: answer => {
-                    if (answer !== 'string' || typeof answer == ' ') {
-                        console.log("please enter a valid answer");
-                        return false;}
-                    else {
-                        return true;}
-                    }
-                }]
-            )
-            ++id;
-            const newEngineer = new Engineer (resOne.name, id, resOne.email, resTwo.gitHubName);
-            console.log(newEngineer);
-            roster.push(newEngineer);
-        }
-        else if (response.role === 'intern') {
-            resTwo = await prompt.inquirer (
-                [{type: 'input',
-                name: 'schoolName',
-                message: 'What is the name of the school intern is attending?',
-                validate: answer => {
-                    if (answer !== 'string' || typeof answer == ' ') {
-                        console.log("please enter a valid answer");
-                        return false;}
-                    else {
-                        return true;}
-                    }
-                }]
-            )
-            ++id;
-            const newIntern = new Intern (resOne.name, id, resOne.email, resTwo.schoolName);
-            console.log(newIntern);
-            roster.push(newIntern);
-        }
-        else if (response.role === 'manager') {
-            resTwo = await prompt.inquirer (
-                [{type: 'input',
-                name: 'officeNumber',
-                message: 'What is the employee office number?',
-                validate: answer => {
-                    if (answer !== 'number' || typeof answer == ' ') {
-                        console.log("please enter a valid email");
-                        return false;}
-                    else {
-                        return true;}
-                    }
-                }]
-            )
-            ++id;
-            const newManager = new Manager (resOne.name, id, resOne.email, resTwo.officeNumber);
-            console.log(newManager);
-            roster.push(newManager);
-        }
-    }
-    catch (err) {
+        let resOne = await promptUser();
+        switch (resOne.role) {
+            case 'engineer':
+                ++id;
+                const newEngineer = new Engineer (resOne.name, id, resOne.email, resOne.gitHubName);
+                roster.push(newEngineer);
+                resume();
+                break;
+            case 'intern':
+                ++id;
+                const newIntern = new Intern (resOne.name, id, resOne.email, resOne.schoolName);
+                roster.push(newIntern);
+                resume();
+                break;
+            case 'manager':
+                ++id;
+                const newManager = new Manager (resOne.name, id, resOne.email, resOne.officeNumber);
+                roster.push(newManager);
+                resume();
+                break;
+            default:
+                resume();
+        };
+    } catch (err) {
         return console.log(err);
     }
-    console.log(roster)
-
-    responseEnd = await inquirer.prompt([{
-        type:'confirm',
-        name: 'end',
-        message: 'Would you like to enter another employee information?'
-    }]).then(function(resThree){
-        resThree.end ? init() : generateHTML ()
-    })
-};
+}
 
 async function generateHTML() {
     try{
-        await init();
-        for (let i=0; i<roster.length; i++) {
-            render(roster[i]);
-        }
+        fs.writeFileSync(outputPath, render(roster), 'utf-8')
     }
     catch (err) {
         console.log(err);
     }
-
-    fs.writeFileSync('team.html', )
 }
 
-
+init();
 
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
