@@ -39,6 +39,7 @@ I also needed to collect and write functions to generate the final HTML website.
 npm install
 
 ## Usage
+![usage](screenshot.gif)
 run the app.js
 
 ## Tests
