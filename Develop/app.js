@@ -64,6 +64,7 @@ async function init () {
 async function generateHTML() {
     try{
         fs.writeFileSync(outputPath, render(roster), 'utf-8')
+        console.log('successfully created html');
     }
     catch (err) {
         console.log(err);

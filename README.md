@@ -45,8 +45,9 @@ run the app.js
 npm test
 
 ### Technologies
-* Bootstrap CDN by Stackpath
+* Bootstrap
 * fontawesome
+* GoogleFonts
 
 ## Contributors
 s2hon
